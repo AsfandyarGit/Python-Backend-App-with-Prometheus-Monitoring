@@ -24,7 +24,7 @@ This project includes a backend application built using FastAPI, a modern, fast 
 Follow these steps to get started with the project:
 
 1. **Clone the repository:** 
-   - `git clone https://github.com/yourusername/your-repo.git`
+   - `git clone https://gitlab.com/portfolio7062046/python-backend-app-with-prometheus-monitoring.git`
 
 2. [Install Docker](https://docs.docker.com/get-docker/) to containerize the application.
 
