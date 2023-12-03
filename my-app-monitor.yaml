@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: monitoring
+    app: backend-test-app
+  name: backend-srv
+  namespace: default  # Replace with your desired namespace
+spec:
+  selector:
+    matchLabels:
+      app: backend-test-app  # Replace with your app's labels
+  endpoints:
+  - port: http
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - default  # Replace with your app's namespace

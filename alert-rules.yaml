@@ -1,0 +1,48 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: main-rules
+  namespace: default
+  labels:
+    release: monitoring
+    app: backend-test-app
+spec:
+  groups:
+  - name: alertmanager.rules
+    rules:
+    - alert: HostHighCpuLoad
+      expr: 100 - (avg by(isntance)(rate(node_cpu_seconds_total{mode="idle"}[2m]))*100) > 90
+      for: 2m
+      labels:
+        severity: warning
+        namespace: default
+      annotations:
+        description: Very High Load on CPU
+        summary: "Host CPU Load High"
+    - alert: KubePodCrashLooping
+      expr: kube_pod_container_status_restarts_total > 5
+      for: 0m
+      labels:
+        severity: critical
+        namespace: default
+      annotations:
+        description: Pod {{ $labels.pod }} is CrashLooping\n Value = {{ $value}}
+        summary: "CrashLooping"
+    - alert: HttpRequestsCount
+      expr: avg by(container)(http_requests_total) > 1500
+      for: 0m
+      labels:
+        severity: warning
+        namespace: default
+      annotations:
+        description: Requests count have increased 1500
+        summary: "this is requests count"
+    - alert: HttpRequestsRate
+      expr: avg by(container)(rate(http_requests_total[2m])) > 0.5
+      for: 0m
+      labels:
+        severity: warning
+        namespace: default
+      annotations:
+        description: Requests rate increased
+        summary: "this is requests rate"
