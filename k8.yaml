@@ -1,0 +1,61 @@
+# First, add the API
+apiVersion: apps/v1
+# This will be the deployment setup
+kind: Deployment
+metadata:
+  # Name your Deployment here
+  name: backend-app
+  labels:
+    # label your deployment
+    app: backend-test-app
+spec:
+  # The number of pods/replicas to run
+  replicas: 2            
+  selector:
+    matchLabels:
+    # selector to match the pod
+      app: backend-test-app  
+  template:
+    metadata:
+      labels:
+      # label your pod
+        app: backend-test-app  
+    spec:
+      imagePullSecrets:
+      - name: my-reg-key
+      containers:
+      # Add the container name for Kubernetes
+      - name: my-container 
+      # Add the local image name
+        image: username/reponame:myimage
+        # never pull the image policy
+        # imagePullPolicy: Never
+        ports:
+        # port for running the container
+        - containerPort: 8000   
+---
+# First, add the Service API
+apiVersion: v1
+# This will be the Service setup
+kind: Service
+metadata:
+  # Your service name
+  name: backend-srv
+  labels:
+    # label your service
+    app: backend-test-app 
+spec:
+  selector:
+    # selector that matches the pod
+    app: backend-test-app 
+  # type of service
+  type: NodePort # LoadBalancer     
+  ports:
+  - name: http
+    # protocol: TCP 
+    # port for exposing the service        
+    port: 8000
+    # portfor exposing the pod             
+    targetPort: 8000
+    # port for exposing the node       
+    # nodePort: 8000
